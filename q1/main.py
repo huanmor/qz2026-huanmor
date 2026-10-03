@@ -12,26 +12,29 @@ def analyze_log(filepath: str) -> dict:
         return result 
 
     with open(filepath, 'r', encoding="utf-8") as file:
-        try:
-            log_data = [json.loads(line) for line in file]
-            for entry in log_data:
+        for line in file:
+            try:
+                entry = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            #log_data = [json.loads(line) for line in file]
+            entry= json.loads(line)
+            #for entry in log_data:
 
-                result["total"] += 1
-                level = entry["level"]
-                if level in result["by_level"]:
-                    result["by_level"][level] += 1
-                user = entry["user"]
-                if user in result["by_user"]:
-                    result["by_user"][user] += 1
-                else :
-                    result["by_user"][user] = 1 
+            result["total"] += 1
+            level = entry["level"]
+            if level in result["by_level"]:
+                result["by_level"][level] += 1
+            user = entry["user"]
+            if user in result["by_user"]:
+                result["by_user"][user] += 1
+            else :
+                result["by_user"][user] = 1 
 
-                if level == "ERROR":
-                    result["last_error"] = entry["message"]; #只记录最后一次ERROR
-                return result 
-        except  json.JSONDecodeError:
-            continue
-
+            if level == "ERROR":
+                result["last_error"] = entry["message"]; #只记录最后一次ERROR
+    return result 
+            
 
 result = analyze_log("app.jsonl")
 #print(f"\"total\":{result["total"]}")        # 5
