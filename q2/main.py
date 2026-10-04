@@ -1,15 +1,11 @@
 import json
-def rewrite():
-    with open("users.json", "w",encoding="utf-8") as f:
-                for line in lines:
-                    json.dump(line,f,ensure_ascii=False) 
-                    f.write("\n")
 class UsersManage:
+    #清空用户数据
     def clear(self):
         with open("users.json", "w",encoding="utf-8") as file:
             file.write("")
 
-    
+    #添加用户
     def add_user(self, name, age):
         self.name = name
         self.age = age
@@ -19,7 +15,7 @@ class UsersManage:
             json.dump({"id": i, "name": self.name, "age": self.age}, file ,ensure_ascii=False)
             file.write("\n")
 
-    
+    #查询用户
     def get_users(self,id):
         with open("users.json", "r",encoding="utf-8") as file:
             for line in file:
@@ -30,7 +26,7 @@ class UsersManage:
             else:
                 print("None")
 
-
+    #更新用户年龄
     def update_age(self,id,new_age):
         lines = []
         flog = True
@@ -51,7 +47,7 @@ class UsersManage:
             for line in lines:
                 json.dump(line,f,ensure_ascii=False) 
                 f.write("\n")
-
+    #删除用户
     def remove_user(self,id):
         lines = []
         flog = True
@@ -72,10 +68,28 @@ class UsersManage:
             for line in lines:
                 json.dump(line,f,ensure_ascii=False) 
                 f.write("\n")
+    #列出所有用户
+    def list_users(self):
+        with open("users.json", "r",encoding="utf-8") as file:
+            for line in file:
+                user = json.loads(line)
+                print(user)
 
-       
-    
-    
+    #保存用户数据到JSON文件
+    def save_to_json(self,des_path):
+        with open("users.json", "r",encoding="utf-8") as file:
+            users = [json.loads(line) for line in file]
+        with open(des_path, "w",encoding="utf-8") as file:
+            json.dump(users, file, ensure_ascii=False)
+
+    #从JSON文件加载用户数据
+    def load_from_json(self, src_path):
+        with open(src_path, "r",encoding="utf-8") as file:
+            users = json.load(file)
+        with open("users.json", "w",encoding="utf-8") as file:
+            for user in users:
+                json.dump(user, file, ensure_ascii=False)
+                file.write("\n")
     
 
 
@@ -83,12 +97,19 @@ class UsersManage:
 
 um = UsersManage()
 um.clear()
-um.add_user("John Doe", 30)
-um.add_user("Jane Smith", 25)
-um.add_user("Alice Johnson", 28)
-um.add_user("Bob Brown", 35)
-um.add_user("Charlie Davis", 22)
-#um.get_users(1)
-um.remove_user(3)
-um.remove_user(3)
-um.update_age(1, 31)
+um.add_user("张三", 18)   
+um.add_user("李四", 20)   
+#um.list_users()  
+
+
+#um.get_users(1)            
+um.get_users(99)           
+um.update_age(1, 19)     
+
+um.remove_user(2)         
+um.remove_user(2)         
+um.list_users()          
+um.save_to_json("users.json")
+um2 = UsersManage()
+um2.load_from_json("users.json")
+um2.list_users()       
